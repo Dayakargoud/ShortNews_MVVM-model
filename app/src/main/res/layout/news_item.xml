@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+           <variable
+               name="article"
+               type="com.dayakar.shortnews.newsData.Article" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_margin="4dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/article_news_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            app:imageUrl="@{article.urlToImage}"
+            android:transitionName="hello"
+            tools:srcCompat="@drawable/electronics"
+            android:contentDescription="@string/news_image" />
+
+        <TextView
+            android:id="@+id/news_title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{article.title}"
+            android:transitionName="hai"
+            tools:text="Title"
+            android:textAlignment="inherit"
+            android:layout_margin="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_below="@+id/article_news_imageView" />
+
+    </RelativeLayout>
+</layout>

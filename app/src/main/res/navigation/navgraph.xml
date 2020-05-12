@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navgraph"
+    app:startDestination="@id/fragment_viewPager2">
+
+    <fragment
+        android:id="@+id/newsDetailsFragment"
+        android:name="com.dayakar.shortnews.newsDetails.NewsDetailsFragment"
+        android:label="Details"
+        tools:layout="@layout/fragment_news_details">
+<!--        <argument-->
+<!--            android:name="selectedArticle"-->
+<!--            app:argType="com.dayakar.shortnews.newsData.Article"-->
+
+<!--            />-->
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_viewPager2"
+        android:name="com.dayakar.shortnews.viewpager.FragmentViewPager"
+        android:label="Fragment_viewPager"
+        tools:layout="@layout/fragment_view_pager"
+        >
+        <action
+            android:id="@+id/action_fragment_viewPager2_to_newsDetailsFragment2"
+            app:destination="@id/newsDetailsFragment" />
+        <action
+            android:id="@+id/action_fragment_viewPager2_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:popUpTo="@id/fragment_viewPager2" />
+        <action
+            android:id="@+id/action_fragment_viewPager2_to_addCategoryFragment"
+            app:destination="@id/addCategoryFragment"
+            app:popUpTo="@id/fragment_viewPager2" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.dayakar.shortnews.searchnews.SearchNewsFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <argument
+            android:name="searchQuery"
+            app:argType="string"
+
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="com.dayakar.shortnews.AddCategoryFragment"
+        android:label="fragment_add_category"
+        tools:layout="@layout/fragment_add_category" />
+
+</navigation>
