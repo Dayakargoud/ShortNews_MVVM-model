@@ -2,6 +2,7 @@ package com.dayakar.shortnews.latestNews
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.util.Log
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -66,10 +67,12 @@ class LatestNewsViewModel(args:String) :ViewModel(){
             try {
                 _status.value=NewsApiStatus.LOADING
                 _newsList.value = newsnetworkResponse.body()?.articles
+                Log.d("Latest View model","Body = ${newsnetworkResponse.body().toString()}")
                 _status.value=NewsApiStatus.DONE
 
             } catch (e: Exception) {
                _networkResponseCode.value=newsnetworkResponse.message()
+                Log.d("Latest View model","Exception -> ${e.message}")
                 _status.value=NewsApiStatus.ERROR
 
             }

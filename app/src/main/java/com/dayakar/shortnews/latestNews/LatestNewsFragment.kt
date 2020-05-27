@@ -6,22 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
+
 import androidx.lifecycle.Observer
 
 import com.dayakar.shortnews.Utils.NewsAdapter
 import com.dayakar.shortnews.databinding.FragmentLatestNewsBinding
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.ActivityNavigator
-import androidx.navigation.ActivityNavigatorExtras
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import com.dayakar.shortnews.R
-import com.dayakar.shortnews.viewpager.ViewPagerViewModel
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import android.util.Pair as UtilPair
 
 
 /**
@@ -45,7 +37,9 @@ class LatestNewsFragment() : Fragment() {
         val binding = FragmentLatestNewsBinding.inflate(inflater)
         binding.setLifecycleOwner(this)
         binding.viewModel=viewModel
-        binding.latestNewsRecyclerView.adapter =  NewsAdapter()
+        var adapter=NewsAdapter()
+        binding.latestNewsRecyclerView.adapter =  adapter
+
         viewModel.networkResponseCode.observe(viewLifecycleOwner, Observer {
             response-> netwokResponse=response
             Toast.makeText(context,netwokResponse,Toast.LENGTH_SHORT).show()

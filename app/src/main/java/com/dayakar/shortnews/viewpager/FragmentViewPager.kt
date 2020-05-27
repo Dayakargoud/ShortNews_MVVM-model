@@ -2,6 +2,7 @@ package com.dayakar.shortnews.viewpager
 
 import android.app.Application
 import android.content.Context
+import android.content.IntentFilter
 import android.icu.text.Transliterator
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -16,7 +17,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.dayakar.shortnews.databinding.FragmentViewPagerBinding
 import com.dayakar.shortnews.latestNews.LatestNewsFragment
+import com.dayakar.shortnews.network.ConnectivityReceiver
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 /**
@@ -32,7 +39,7 @@ class FragmentViewPager : Fragment() {
 
         // Inflate the layout for this fragment
         val binding = FragmentViewPagerBinding.inflate(inflater)
-        val viewModel = activity?.let { ViewModelProvider(it).get(ViewPagerViewModel::class.java) }
+        val viewModel = activity?.let { ViewModelProvider(it,ViewPagerViewModelProviderFactory(requireActivity().application)).get(ViewPagerViewModel::class.java) }
 
         binding.setLifecycleOwner(this)
         val categories=viewModel?.categories?.value
@@ -40,19 +47,9 @@ class FragmentViewPager : Fragment() {
         if (categories != null) {
             categoryList=categories
         }
-
         val tabLayout = binding.tabs
         val viewPager = binding.viewPager
 
-
-//        NetworkConnection(requireContext()).internet.observe(viewLifecycleOwner, Observer {
-//            if(it){
-//                Toast.makeText(context,"Live data Connected to internet",Toast.LENGTH_SHORT).show()
-//            }else{
-//                Toast.makeText(context,"Live data Connected to internet",Toast.LENGTH_SHORT).show()
-//
-//            }
-//        })
 
         if(isInternetOn()) {
             viewPager.adapter = PagerSliderAdapter(this)
@@ -67,12 +64,21 @@ class FragmentViewPager : Fragment() {
           //  Toast.makeText(context,"No internet connection",Toast.LENGTH_SHORT).show()
             //Snackbar.make(binding.root,"No internet connection",Snackbar.LENGTH_SHORT).show()
         }
+        viewModel?.itemAdded?.observe(viewLifecycleOwner, Observer {
+            CoroutineScope(Dispatchers.Main).launch {
+                viewPager.setCurrentItem(categoryList.size ,true)
+                tabLayout.getTabAt(categoryList.size)?.select()
+            }
 
+        })
          setHasOptionsMenu(true)
-
 
         return binding.root
 
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
    private fun isInternetOn(): Boolean {
@@ -101,4 +107,6 @@ class FragmentViewPager : Fragment() {
 
 
     }
+
+
 }

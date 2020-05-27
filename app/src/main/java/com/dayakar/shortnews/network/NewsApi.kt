@@ -27,6 +27,7 @@ private val retrofit = Retrofit.Builder()
 
 
 interface NewsApiService {
+    //"https://newsapi.org/v2/top-headlines/?country=in&page=1&apiKey=a3a7c65515f0426da9c5e5091c91ad27
 //?country=in&page=1&apiKey=a3a7c65515f0426da9c5e5091c91ad27
     @GET("v2/top-headlines")
     suspend fun getTopHeadlines(

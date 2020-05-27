@@ -1,6 +1,7 @@
 package com.dayakar.shortnews
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -53,17 +54,15 @@ class CategoryPrefFragment : PreferenceFragmentCompat() {
             if (selectedPref != null) {
                 val isPrefSelected: Boolean = selectedPref.sharedPreferences.getBoolean(key, false)
                 if (isPrefSelected) {
-                        model.addCategory(title)
-
-                   // Toast.makeText(context, viewModel.message.value.toString(), Toast.LENGTH_SHORT).show()
-
-
-
+                        model.addCategory(key)
                 } else {
-                    Toast.makeText(context, "$title is removed", Toast.LENGTH_SHORT).show()
+                    model.removeCategory(key)
+                        Toast.makeText(context, "$key is removed", Toast.LENGTH_SHORT).show()
+
+                    }
 
                 }
-            }
+
             return false
         }
 

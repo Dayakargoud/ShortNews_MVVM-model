@@ -11,37 +11,42 @@ import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.app.ShareCompat
+import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import com.dayakar.shortnews.BuildConfig
 import com.dayakar.shortnews.R
 import com.dayakar.shortnews.databinding.ActivityMainBinding
 import com.dayakar.shortnews.viewpager.FragmentViewPagerDirections
+import com.google.android.material.internal.NavigationMenuItemView
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
-class MainActivity : AppCompatActivity() {
-
-    
+class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener {
+      lateinit var navController: NavController
+      lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding=DataBindingUtil.setContentView<ActivityMainBinding>(this,
-            R.layout.activity_main
-        )
+         binding=DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
-        val navController = this.findNavController(R.id.myNavHostFragment)
+         navController = this.findNavController(R.id.myNavHostFragment)
        // navController.setGraph(R.navigation.navgraph)
         setSupportActionBar(binding.toolbar)
 
          NavigationUI.setupActionBarWithNavController(this,navController)
-        NavigationUI.setupWithNavController(binding.toolbar,navController,binding.drawerLayout).also {
-            NavigationUI.setupWithNavController(binding.navView,navController)
+        NavigationUI.setupWithNavController(binding.toolbar,navController,binding.drawerLayout)
+        binding.navView.setNavigationItemSelectedListener(this)
 
-        }
 
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
@@ -55,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                     val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
                     //send query to searchFragment
-                    val navController = findNavController(R.id.myNavHostFragment)
+                  //  val navController = findNavController(R.id.myNavHostFragment)
                     navController.navigate(
                         FragmentViewPagerDirections.actionFragmentViewPager2ToSearchFragment(
                             query!!
@@ -79,18 +84,8 @@ class MainActivity : AppCompatActivity() {
 
         return when (item.itemId) {
 
-            R.id.share_app->{
-                shareApp()
-                true
-            }
             R.id.addCategoryFragment -> {
-                val navController = this.findNavController(R.id.myNavHostFragment)
-                navController.navigate(FragmentViewPagerDirections.actionFragmentViewPager2ToAddCategoryFragment())
-                true
-            }
-            R.id.about_app->{
-                val version=BuildConfig.VERSION_NAME
-                Toast.makeText(this,"Short News\ncurrent version-$version",Toast.LENGTH_LONG).show()
+                  navController.navigate(R.id.action_fragment_viewPager2_to_addCategoryFragment)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -98,10 +93,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-//    override fun onSupportNavigateUp(): Boolean {
-//        val navController = this.findNavController(R.id.myNavHostFragment)
-//        return navController.navigateUp()
-//    }
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = this.findNavController(R.id.myNavHostFragment)
+        return navController.navigateUp()
+    }
 
     private fun shareApp(){
         val shareIntent = ShareCompat.IntentBuilder.from(this)
@@ -110,6 +105,34 @@ class MainActivity : AppCompatActivity() {
             .createChooserIntent()
             .addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         startActivity(shareIntent)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+          when(item.itemId) {
+             R.id.share_app -> {
+                 shareApp()
+             }
+             R.id.addCategoryFragment -> {
+                 navController.navigate(R.id.action_fragment_viewPager2_to_addCategoryFragment)
+             }
+             R.id.about_app->{
+                 val version=BuildConfig.VERSION_NAME
+                 Toast.makeText(this,"Short News\ncurrent version-$version",Toast.LENGTH_LONG).show()
+             }
+         }
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+
+         return true
+    }
+
+    override fun onBackPressed() {
+
+
+        if(binding.drawerLayout.isDrawerOpen(GravityCompat.START)){
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }else
+          super.onBackPressed()
     }
 
 }
